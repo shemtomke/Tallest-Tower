@@ -19,6 +19,10 @@ public class SelectBlock : MonoBehaviour
 
         blockManager.DisplayBlock();
     }
+    private void OnEnable()
+    {
+        blockManager.currentActiveBlock = null;
+    }
     private void Start()
     {
         UpdateBlock();

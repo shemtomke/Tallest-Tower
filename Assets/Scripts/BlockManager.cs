@@ -9,11 +9,12 @@ public class BlockManager : MonoBehaviour
     public Vector2 blockPos;
 
     public SelectBlock selectBlock;
+    public GameObject currentActiveBlock;
 
     public void DisplayBlock()
     {
         blockPrefab.GetComponent<SpriteRenderer>().sprite = selectBlock.selectedBlock;
-        Instantiate(blockPrefab, blockPos, Quaternion.identity);
+        currentActiveBlock = Instantiate(blockPrefab, blockPos, Quaternion.identity);
         selectBlock.ResetBlock();
     }
 }
