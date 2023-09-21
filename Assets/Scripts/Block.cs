@@ -37,7 +37,6 @@ public class Block : MonoBehaviour
         if(isFall && !isStop)
             transform.Translate(Vector2.down * speed * Time.deltaTime);
     }
-
     // starts moving left and right
     void Move()
     {

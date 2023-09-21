@@ -14,7 +14,4 @@ public class Points : MonoBehaviour
     }
     public int FallenBlockPoints()
     { return currentPoints++; }
-
-    // When a player reaches a certain number of points, one of the flags is opened. Every 10 points unlock a new flag.
-
 }
