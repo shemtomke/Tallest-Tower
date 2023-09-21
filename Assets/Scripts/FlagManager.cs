@@ -21,7 +21,7 @@ public class FlagManager : MonoBehaviour
     }
     private void Update()
     {
-        ActivateFlags();
+        //ActivateFlags();
     }
     void ActivateFlags()
     {
@@ -29,7 +29,7 @@ public class FlagManager : MonoBehaviour
 
         for (int i = 0; i < flags.Count; i++)
         {
-            if (i * pointsPerFlag <= points.currentPoints)
+            if ((i + 1) * pointsPerFlag >= points.currentPoints)
             {
                 // If the player has earned enough points for this flag, display it
                 collection[i].sprite = flags[i];

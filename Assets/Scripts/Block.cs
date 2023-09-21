@@ -9,6 +9,7 @@ public class Block : MonoBehaviour
 
     bool isStop = false;
     public bool isFall = false;
+    bool isStart = false;
     bool isMove = true;
 
     Vector3 initialPosition;
@@ -24,25 +25,31 @@ public class Block : MonoBehaviour
     private void Update()
     {
         Move();
-        Fall();
+
+        if (isFall)
+        {
+            Fall();
+        }
     }
-    // you need to click on the screen, then the block will fall.
-    void Fall()
+    void OnMouseDown()
     {
-        if(Input.GetMouseButtonDown(0) && !isStop)
+        if (!isStop)
         {
             isFall = true;
         }
-
-        if(isFall && !isStop)
-            transform.Translate(Vector2.down * speed * Time.deltaTime);
+    }
+    // you need to click on the screen, then the block will fall.
+    // Fall when isFall is true
+    private void Fall()
+    {
+        transform.Translate(Vector2.down * speed * Time.deltaTime);
     }
     // starts moving left and right
     void Move()
     {
         if(!isFall)
         {
-
+            
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -51,6 +58,7 @@ public class Block : MonoBehaviour
         {
             Debug.Log("Stop Block");
             isStop = true;
+            isFall = false;
             points.FallenBlockPoints();
             blockManager.selectBlock.gameObject.SetActive(true);
         }
