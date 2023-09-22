@@ -9,6 +9,9 @@ public class FlagManager : MonoBehaviour
     public List<Image> collection;
     public Sprite lockedFlag;
 
+    public Image flagPrefab;
+    public RectTransform contentPos;
+
     Points points;
     private void Start()
     {
@@ -16,7 +19,9 @@ public class FlagManager : MonoBehaviour
 
         for (int i = 0; i < collection.Count; i++)
         {
-            collection[i].sprite = lockedFlag;
+            Image flag = Instantiate(flagPrefab, contentPos);
+            collection[i] = flag;
+            flag.sprite = lockedFlag;
         }
     }
     private void Update()

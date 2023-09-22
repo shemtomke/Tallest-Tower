@@ -12,7 +12,9 @@ public class Block : MonoBehaviour
     bool isStart = false;
     bool isMove = true;
 
-    Vector3 initialPosition;
+    private Vector3 touchStartPos;
+    private Vector3 objectStartPos;
+    private bool isDragging = false;
 
     Points points;
     BlockManager blockManager;
@@ -20,7 +22,6 @@ public class Block : MonoBehaviour
     {
         points = FindObjectOfType<Points>();
         blockManager = FindObjectOfType<BlockManager>();
-        initialPosition = transform.position;
     }
     private void Update()
     {
@@ -33,7 +34,7 @@ public class Block : MonoBehaviour
     }
     void OnMouseDown()
     {
-        if (!isStop)
+        if (!isStop && !isDragging)
         {
             isFall = true;
         }
@@ -42,15 +43,59 @@ public class Block : MonoBehaviour
     // Fall when isFall is true
     private void Fall()
     {
-        transform.Translate(Vector2.down * speed * Time.deltaTime);
+        if (isFall && !isStop)
+        {
+            transform.Translate(Vector2.down * speed * Time.deltaTime);
+        }
     }
     // starts moving left and right
     void Move()
     {
-        if(!isFall)
+        if (!isFall)
         {
-            
+            if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            {
+                Vector3 inputPos = Input.GetMouseButtonDown(0)
+                    ? Input.mousePosition
+                    : (Vector3)Input.GetTouch(0).position;
+
+                Ray ray = Camera.main.ScreenPointToRay(inputPos);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
+                {
+                    StartDragging(inputPos);
+                }
+            }
+
+            if (isDragging)
+            {
+                Vector3 inputPos = Input.GetMouseButton(0)
+                    ? Input.mousePosition
+                    : (Vector3)Input.GetTouch(0).position;
+
+                Vector3 touchPos = Camera.main.ScreenToWorldPoint(inputPos);
+                touchPos.y = objectStartPos.y; // Maintain the same Y position
+                touchPos.z = objectStartPos.z; // Maintain the same Z position
+                transform.position = new Vector3(touchPos.x, transform.position.y, transform.position.z);
+
+                if (!Input.GetMouseButton(0) && (Input.touchCount == 0 || Input.GetTouch(0).phase == TouchPhase.Ended))
+                {
+                    StopDragging();
+                }
+            }
         }
+    }
+    private void StartDragging(Vector3 inputPos)
+    {
+        isDragging = true;
+        touchStartPos = Camera.main.ScreenToWorldPoint(inputPos);
+        touchStartPos.z = transform.position.z;
+        objectStartPos = transform.position;
+    }
+    private void StopDragging()
+    {
+        isDragging = false;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

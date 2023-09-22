@@ -13,9 +13,9 @@ public class Timer : MonoBehaviour
     private void Start()
     {
         timerText.text = "00:00"; // Set initial timer text
-
-        // You can start the timer from somewhere else in your game if needed
-        // For example, call StartTimer() to start it.
+    }
+    private void OnEnable()
+    {
         StartTimer();
     }
 
