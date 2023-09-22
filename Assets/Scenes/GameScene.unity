@@ -2172,11 +2172,11 @@ MonoBehaviour:
   pointsText:
   - {fileID: 760330920}
   - {fileID: 1413596703}
-  currentPoints: 5
-  highscore: 5
   bestScoreText:
-  - {fileID: 1232730282}
   - {fileID: 1952210775}
+  - {fileID: 1232730282}
+  currentPoints: 0
+  highscore: 0
 --- !u!4 &788175847
 Transform:
   m_ObjectHideFlags: 0

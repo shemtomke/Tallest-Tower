@@ -7,18 +7,20 @@ using UnityEngine.UI;
 public class Points : MonoBehaviour
 {
     public Text[] pointsText;
+    public Text[] bestScoreText;
+
     public int currentPoints = 0;
     public int highscore = 0;
 
-    public Text[] bestScoreText;
-
     string highScoreSave = "HIGHSCORE";
-
+    private void Start()
+    {
+        UpdateHighScoreText();
+    }
     private void Update()
     {
-        Debug.Log("Update method is running.");
-        UpdateScoreText();
         GetHighScore();
+        UpdateScoreText();
     }
     public int FallenBlockPoints()
     { return currentPoints++; }
