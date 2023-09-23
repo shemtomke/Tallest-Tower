@@ -15,25 +15,15 @@ public class Points : MonoBehaviour
     string highScoreSave = "HIGHSCORE";
     private void Start()
     {
+        highscore = PlayerPrefs.GetInt(highScoreSave);
         UpdateHighScoreText();
     }
     private void Update()
     {
-        GetHighScore();
         UpdateScoreText();
     }
     public int FallenBlockPoints()
     { return currentPoints++; }
-    void GetHighScore()
-    {
-        if (currentPoints > highscore)
-        {
-            highscore = currentPoints;
-            PlayerPrefs.SetInt(highScoreSave, highscore);
-            PlayerPrefs.Save();
-            UpdateHighScoreText();
-        }
-    }
     // Reset the current score
     public void ResetScore()
     {
@@ -65,6 +55,14 @@ public class Points : MonoBehaviour
         for (int i = 0; i < bestScoreText.Length; i++)
         {
             bestScoreText[i].text = "" + highscore;
+        }
+
+        if (currentPoints > highscore)
+        {
+            highscore = currentPoints;
+            PlayerPrefs.SetInt(highScoreSave, highscore);
+            PlayerPrefs.Save();
+            UpdateHighScoreText();
         }
     }
 }
