@@ -37,11 +37,18 @@ public class SelectBlock : MonoBehaviour
     }
     public void NextBlock()
     {
-        if (currentBlock < (blockManager.blocks.Count - 1) && !isSelect) { currentBlock++; }
+        if (!isSelect)
+        {
+            currentBlock = (currentBlock + 1) % blockManager.blocks.Count;
+        }
     }
     public void PreviousBlock()
     {
-        if (currentBlock > 0 && !isSelect) { currentBlock--; }
+        if (!isSelect)
+        {
+            // Add blockManager.blocks.Count to handle negative index cases and loop around
+            currentBlock = (currentBlock - 1 + blockManager.blocks.Count) % blockManager.blocks.Count;
+        }
     }
     public void ResetBlock()
     {

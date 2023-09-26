@@ -7,15 +7,14 @@ public class Block : MonoBehaviour
     public float speed;
     public GameObject block;
 
+    private bool hasCollided = false;
+    public bool isDragging = false;
     bool isStop = false;
     public bool isFall = false;
-    bool isStart = false;
-    bool isMove = true;
 
     private Vector3 touchStartPos;
     private Vector3 objectStartPos;
-    private bool isDragging = false;
-
+    
     Points points;
     BlockManager blockManager;
     private void Start()
@@ -25,25 +24,27 @@ public class Block : MonoBehaviour
     }
     private void Update()
     {
-        Move();
-
         if (isFall)
         {
             Fall();
+        }
+        else
+        {
+            Move();
         }
     }
     void OnMouseDown()
     {
         if (!isStop && !isDragging)
         {
-            isFall = true;
+            isFall = true; // Set the flag when done moving
         }
     }
     // you need to click on the screen, then the block will fall.
     // Fall when isFall is true
     private void Fall()
     {
-        if (isFall && !isStop)
+        if (!isStop)
         {
             transform.Translate(Vector2.down * speed * Time.deltaTime);
         }
@@ -51,57 +52,72 @@ public class Block : MonoBehaviour
     // starts moving left and right
     void Move()
     {
-        if (!isFall)
+        // Check for touch input
+        foreach (Touch touch in Input.touches)
         {
-            if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (touch.phase == TouchPhase.Began)
             {
-                Vector3 inputPos = Input.GetMouseButtonDown(0)
-                    ? Input.mousePosition
-                    : (Vector3)Input.GetTouch(0).position;
+                // Store the initial touch position and the object's current position
+                touchStartPos = Camera.main.ScreenToWorldPoint(touch.position);
+                objectStartPos = transform.position;
 
-                Ray ray = Camera.main.ScreenPointToRay(inputPos);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == gameObject)
+                // Check if the touch started on this GameObject
+                RaycastHit2D hit = Physics2D.Raycast(touchStartPos, Vector2.zero);
+                if (hit.collider != null && hit.collider.gameObject == gameObject)
                 {
-                    StartDragging(inputPos);
+                    isDragging = true;
                 }
             }
-
-            if (isDragging)
+            else if (touch.phase == TouchPhase.Moved && isDragging)
             {
-                Vector3 inputPos = Input.GetMouseButton(0)
-                    ? Input.mousePosition
-                    : (Vector3)Input.GetTouch(0).position;
+                // Calculate the new position of the GameObject based on touch movement
+                Vector3 touchCurrentPos = Camera.main.ScreenToWorldPoint(touch.position);
+                Vector3 newPosition = new Vector3(touchCurrentPos.x - touchStartPos.x + objectStartPos.x, transform.position.y, transform.position.z);
 
-                Vector3 touchPos = Camera.main.ScreenToWorldPoint(inputPos);
-                touchPos.y = objectStartPos.y; // Maintain the same Y position
-                touchPos.z = objectStartPos.z; // Maintain the same Z position
-                transform.position = new Vector3(touchPos.x, transform.position.y, transform.position.z);
-
-                if (!Input.GetMouseButton(0) && (Input.touchCount == 0 || Input.GetTouch(0).phase == TouchPhase.Ended))
-                {
-                    StopDragging();
-                }
+                // Move the GameObject to the new position
+                transform.position = newPosition;
+            }
+            else if (touch.phase == TouchPhase.Ended && isDragging)
+            {
+                isDragging = false;
             }
         }
-    }
-    private void StartDragging(Vector3 inputPos)
-    {
-        isDragging = true;
-        touchStartPos = Camera.main.ScreenToWorldPoint(inputPos);
-        touchStartPos.z = transform.position.z;
-        objectStartPos = transform.position;
-    }
-    private void StopDragging()
-    {
-        isDragging = false;
+        // Check for touch or mouse input
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Store the initial touch/mouse position and the object's current position
+            touchStartPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            objectStartPos = transform.position;
+
+            // Check if the touch/mouse click is on this GameObject
+            RaycastHit2D hit = Physics2D.Raycast(touchStartPos, Vector2.zero);
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            {
+                isDragging = true;
+            }
+        }
+        // Check if the player is holding down the touch/mouse button and dragging
+        if (isDragging && (Input.GetMouseButton(0) || Input.touchCount > 0))
+        {
+            Vector3 touchCurrentPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // Calculate the new position of the GameObject based on the X-axis movement
+            Vector3 newPosition = new Vector3(touchCurrentPos.x - touchStartPos.x + objectStartPos.x, transform.position.y, transform.position.z);
+
+            // Move the GameObject to the new position
+            transform.position = newPosition;
+        }
+        // Release the GameObject when the touch/mouse button is released
+        if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Base") || collision.gameObject.CompareTag("Block"))
+        if (!hasCollided && (collision.gameObject.CompareTag("Base") || collision.gameObject.CompareTag("Block")))
         {
-            Debug.Log("Stop Block");
+            hasCollided = true;
             isStop = true;
             isFall = false;
             points.FallenBlockPoints();
