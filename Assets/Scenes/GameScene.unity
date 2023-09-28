@@ -2230,6 +2230,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1199502495}
+        m_TargetAssemblyTypeName: Timer, Assembly-CSharp
+        m_MethodName: StartTimer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &786351071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3928,6 +3940,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1199502493}
   - component: {fileID: 1199502494}
+  - component: {fileID: 1199502495}
   m_Layer: 0
   m_Name: BlockManager
   m_TagString: Untagged
@@ -3982,6 +3995,19 @@ MonoBehaviour:
   blockPos: {x: 0, y: 4.5}
   selectBlock: {fileID: 1215647738}
   currentActiveBlock: {fileID: 0}
+--- !u!114 &1199502495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199502492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9154f3f0b706da640862eb8e36fe4982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerText: {fileID: 183163185}
 --- !u!1 &1200502919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4139,7 +4165,6 @@ GameObject:
   - component: {fileID: 1215647734}
   - component: {fileID: 1215647737}
   - component: {fileID: 1215647738}
-  - component: {fileID: 1215647739}
   m_Layer: 0
   m_Name: Select Block
   m_TagString: Untagged
@@ -4257,19 +4282,6 @@ MonoBehaviour:
   blockManager: {fileID: 1199502494}
   isSelect: 0
   selectedBlock: {fileID: 0}
---- !u!114 &1215647739
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1215647733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9154f3f0b706da640862eb8e36fe4982, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerText: {fileID: 183163185}
 --- !u!1 &1224898572
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,13 +33,6 @@ public class Block : MonoBehaviour
             Move();
         }
     }
-    void OnMouseDown()
-    {
-        if (!isStop && !isDragging)
-        {
-            isFall = true; // Set the flag when done moving
-        }
-    }
     // you need to click on the screen, then the block will fall.
     // Fall when isFall is true
     private void Fall()
@@ -76,10 +69,31 @@ public class Block : MonoBehaviour
 
                 // Move the GameObject to the new position
                 transform.position = newPosition;
+
+                float distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
+
+                // Check if the distance is greater than 0.1 (your threshold)
+                if (distance > 0.1f)
+                {
+                    isDragging = true;
+                }
             }
             else if (touch.phase == TouchPhase.Ended && isDragging)
             {
-                isDragging = false;
+                if (isDragging)
+                {
+                    // Handle drag end
+                    isDragging = false;
+                }
+                else
+                {
+                    // Handle tap
+                    // Make the block fall (e.g., apply gravity)
+                    if (!isStop && !isDragging)
+                    {
+                        isFall = true; // Set the flag when done moving
+                    }
+                }
             }
         }
         // Check for touch or mouse input
@@ -106,11 +120,32 @@ public class Block : MonoBehaviour
 
             // Move the GameObject to the new position
             transform.position = newPosition;
+
+            float distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
+
+            // Check if the distance is greater than 0.1 (your threshold)
+            if (distance > 0.1f)
+            {
+                isDragging = true;
+            }
         }
         // Release the GameObject when the touch/mouse button is released
         if (Input.GetMouseButtonUp(0))
         {
-            isDragging = false;
+            if (isDragging)
+            {
+                // Handle drag end
+                isDragging = false;
+            }
+            else
+            {
+                // Handle tap
+                // Make the block fall (e.g., apply gravity)
+                if (!isStop && !isDragging)
+                {
+                    isFall = true; // Set the flag when done moving
+                }
+            }
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)

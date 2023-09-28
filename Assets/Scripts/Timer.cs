@@ -10,10 +10,9 @@ public class Timer : MonoBehaviour
     private float startTime;
     private bool isRunning = false;
 
-    private void OnEnable()
+    private void Start()
     {
         timerText.text = "00:00"; // Set initial timer text
-        StartTimer();
     }
 
     private void Update()
