@@ -45,57 +45,8 @@ public class Block : MonoBehaviour
     // starts moving left and right
     void Move()
     {
-        // Check for touch input
-        foreach (Touch touch in Input.touches)
-        {
-            if (touch.phase == TouchPhase.Began)
-            {
-                // Store the initial touch position and the object's current position
-                touchStartPos = Camera.main.ScreenToWorldPoint(touch.position);
-                objectStartPos = transform.position;
+        float distance = 0;
 
-                // Check if the touch started on this GameObject
-                RaycastHit2D hit = Physics2D.Raycast(touchStartPos, Vector2.zero);
-                if (hit.collider != null && hit.collider.gameObject == gameObject)
-                {
-                    isDragging = true;
-                }
-            }
-            else if (touch.phase == TouchPhase.Moved && isDragging)
-            {
-                // Calculate the new position of the GameObject based on touch movement
-                Vector3 touchCurrentPos = Camera.main.ScreenToWorldPoint(touch.position);
-                Vector3 newPosition = new Vector3(touchCurrentPos.x - touchStartPos.x + objectStartPos.x, transform.position.y, transform.position.z);
-
-                // Move the GameObject to the new position
-                transform.position = newPosition;
-
-                float distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
-
-                // Check if the distance is greater than 0.1 (your threshold)
-                if (distance > 0.1f)
-                {
-                    isDragging = true;
-                }
-            }
-            else if (touch.phase == TouchPhase.Ended && isDragging)
-            {
-                if (isDragging)
-                {
-                    // Handle drag end
-                    isDragging = false;
-                }
-                else
-                {
-                    // Handle tap
-                    // Make the block fall (e.g., apply gravity)
-                    if (!isStop && !isDragging)
-                    {
-                        isFall = true; // Set the flag when done moving
-                    }
-                }
-            }
-        }
         // Check for touch or mouse input
         if (Input.GetMouseButtonDown(0))
         {
@@ -111,23 +62,19 @@ public class Block : MonoBehaviour
             }
         }
         // Check if the player is holding down the touch/mouse button and dragging
-        if (isDragging && (Input.GetMouseButton(0) || Input.touchCount > 0))
+        if (Input.GetMouseButton(0))
         {
             Vector3 touchCurrentPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
             // Calculate the new position of the GameObject based on the X-axis movement
             Vector3 newPosition = new Vector3(touchCurrentPos.x - touchStartPos.x + objectStartPos.x, transform.position.y, transform.position.z);
 
             // Move the GameObject to the new position
             transform.position = newPosition;
+            distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
 
-            float distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
-
-            // Check if the distance is greater than 0.1 (your threshold)
-            if (distance > 0.1f)
-            {
-                isDragging = true;
-            }
+            // Check if the distance is greater than 0.1 (threshold)
+            if (distance >= 0.01f) { isDragging = true; }
+            else { isDragging = false; }
         }
         // Release the GameObject when the touch/mouse button is released
         if (Input.GetMouseButtonUp(0))
@@ -140,10 +87,59 @@ public class Block : MonoBehaviour
             else
             {
                 // Handle tap
-                // Make the block fall (e.g., apply gravity)
                 if (!isStop && !isDragging)
                 {
                     isFall = true; // Set the flag when done moving
+                }
+            }
+        }
+
+        // Check for touch input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                // Store the initial touch position and the object's current position
+                touchStartPos = Camera.main.ScreenToWorldPoint(touch.position);
+                objectStartPos = transform.position;
+
+                // Check if the touch started on this GameObject
+                RaycastHit2D hit = Physics2D.Raycast(touchStartPos, Vector2.zero);
+                if (hit.collider != null && hit.collider.gameObject == gameObject)
+                {
+                    isDragging = true;
+                }
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+                Vector3 touchCurrentPos = Camera.main.ScreenToWorldPoint(touch.position);
+                // Calculate the new position of the GameObject based on the X-axis movement
+                Vector3 newPosition = new Vector3(touchCurrentPos.x - touchStartPos.x + objectStartPos.x, transform.position.y, transform.position.z);
+
+                // Move the GameObject to the new position
+                transform.position = newPosition;
+                distance = Mathf.Abs(touchCurrentPos.x - touchStartPos.x);
+
+                // Check if the distance is greater than 0.1 (threshold)
+                if (distance >= 0.01f) { isDragging = true; }
+                else { isDragging = false; }
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                if (isDragging)
+                {
+                    // Handle drag end
+                    isDragging = false;
+                }
+                else
+                {
+                    // Handle tap
+                    if (!isStop && !isDragging)
+                    {
+                        isFall = true; // Set the flag when done moving
+                    }
                 }
             }
         }
@@ -157,6 +153,7 @@ public class Block : MonoBehaviour
             isFall = false;
             points.FallenBlockPoints();
             blockManager.selectBlock.gameObject.SetActive(true);
+            this.GetComponent<Block>().enabled = false;
         }
     }
 }

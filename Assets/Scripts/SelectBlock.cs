@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SelectBlock : MonoBehaviour
@@ -13,11 +14,12 @@ public class SelectBlock : MonoBehaviour
     {
         isSelect = true;
         UpdateBlock();
-
         selectedBlock = this.GetComponent<SpriteRenderer>().sprite;
-        this.gameObject.SetActive(false);
-
+    }
+    private void OnMouseUp()
+    {
         blockManager.DisplayBlock();
+        this.gameObject.SetActive(false);
     }
     private void OnEnable()
     {
@@ -29,7 +31,30 @@ public class SelectBlock : MonoBehaviour
     }
     private void Update()
     {
+        TouchInput();
         UpdateBlock();
+    }
+    void TouchInput()
+    {
+        // Check for touch input
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0); // Get the first touch (you can handle multiple touches if needed)
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                // Touch began, similar to OnMouseDown
+                isSelect = true;
+                UpdateBlock();
+                selectedBlock = GetComponent<SpriteRenderer>().sprite;
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                // Touch ended, similar to OnMouseUp
+                blockManager.DisplayBlock();
+                gameObject.SetActive(false);
+            }
+        }
     }
     void UpdateBlock()
     {
