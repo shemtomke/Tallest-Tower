@@ -9,6 +9,7 @@ public class SelectBlock : MonoBehaviour
     public BlockManager blockManager;
     public bool isSelect = false;
     public Sprite selectedBlock;
+    public BlockPropertiesStatus blockPropertiesStatus;
 
     private void OnMouseDown()
     {
@@ -58,7 +59,8 @@ public class SelectBlock : MonoBehaviour
     }
     void UpdateBlock()
     {
-        this.GetComponent<SpriteRenderer>().sprite = blockManager.blocks[currentBlock];
+        this.GetComponent<SpriteRenderer>().sprite = blockManager.blocks[currentBlock].currentBlock;
+        blockPropertiesStatus.selectedBlockProperty = blockManager.blocks[currentBlock];
     }
     public void NextBlock()
     {

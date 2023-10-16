@@ -5,7 +5,8 @@ using UnityEngine;
 public class BlockManager : MonoBehaviour
 {
     public GameObject blockPrefab;
-    public List<Sprite> blocks;
+    public List<BlockProperties> blocks;
+    public BlockProperties baseBlock;
     public Vector2 blockPos;
 
     public SelectBlock selectBlock;

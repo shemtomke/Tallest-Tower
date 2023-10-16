@@ -5,7 +5,7 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     public float speed;
-    public GameObject block;
+    public GameObject collidingBlock, currentBlock;
 
     private bool hasCollided = false;
     public bool isDragging = false;
@@ -17,10 +17,15 @@ public class Block : MonoBehaviour
     
     Points points;
     BlockManager blockManager;
+    BlockPropertiesStatus blockPropertiesStatus;
+
     private void Start()
     {
         points = FindObjectOfType<Points>();
         blockManager = FindObjectOfType<BlockManager>();
+        blockPropertiesStatus = FindObjectOfType<BlockPropertiesStatus>();
+
+        currentBlock = this.gameObject;
     }
     private void Update()
     {
@@ -31,6 +36,26 @@ public class Block : MonoBehaviour
         else
         {
             Move();
+        }
+
+        if (collidingBlock != null)
+        {
+            var colllidingSprite = collidingBlock.GetComponent<Sprite>();
+
+            if (colllidingSprite == blockManager.baseBlock.currentBlock)
+            {
+                blockPropertiesStatus.collidingBlockProperty = blockManager.baseBlock;
+            }
+            else
+            {
+                for (int i = 0; i < blockManager.blocks.Count; i++)
+                {
+                    if (colllidingSprite == blockManager.blocks[i].currentBlock)
+                    {
+                        blockPropertiesStatus.collidingBlockProperty = blockManager.blocks[i];
+                    }
+                }
+            }
         }
     }
     // you need to click on the screen, then the block will fall.
@@ -148,12 +173,44 @@ public class Block : MonoBehaviour
     {
         if (!hasCollided && (collision.gameObject.CompareTag("Base") || collision.gameObject.CompareTag("Block")))
         {
+            collidingBlock = collision.gameObject;
             hasCollided = true;
             isStop = true;
             isFall = false;
             points.FallenBlockPoints();
-            blockManager.selectBlock.gameObject.SetActive(true);
-            this.GetComponent<Block>().enabled = false;
+            CheckMatchingBlock();
         }
+    }
+    void CheckMatchingBlock()
+    {
+        if(blockPropertiesStatus.collidingBlockProperty != null)
+        {
+            var thisSprite = GetComponent<SpriteRenderer>().sprite;
+            for (int i = 0; i < blockPropertiesStatus.collidingBlockProperty.matchingBlocks.Count; i++)
+            {
+                if (thisSprite == blockPropertiesStatus.collidingBlockProperty.matchingBlocks[i])
+                {
+                    Debug.Log("Matching!");
+                    blockManager.selectBlock.gameObject.SetActive(true);
+                    this.GetComponent<Block>().enabled = false;
+                }
+                else
+                {
+                    Debug.Log("Not Matching!");
+                    blockManager.selectBlock.gameObject.SetActive(false);
+                }
+            }
+        }
+    }
+    IEnumerator StartCheckingMatch()
+    {
+        yield return new WaitForSeconds(1);
+
+        CheckMatchingBlock();
+
+        yield return new WaitForSeconds(1);
+
+        blockManager.selectBlock.gameObject.SetActive(true);
+        this.GetComponent<Block>().enabled = false;
     }
 }
