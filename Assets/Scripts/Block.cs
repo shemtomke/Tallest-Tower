@@ -18,10 +18,12 @@ public class Block : MonoBehaviour
     Points points;
     BlockManager blockManager;
     BlockPropertiesStatus blockPropertiesStatus;
+    GameManager gameManager;
 
     private void Start()
     {
         points = FindObjectOfType<Points>();
+        gameManager = FindObjectOfType<GameManager>();
         blockManager = FindObjectOfType<BlockManager>();
         blockPropertiesStatus = FindObjectOfType<BlockPropertiesStatus>();
 
@@ -36,26 +38,6 @@ public class Block : MonoBehaviour
         else
         {
             Move();
-        }
-
-        if (collidingBlock != null)
-        {
-            var colllidingSprite = collidingBlock.GetComponent<Sprite>();
-
-            if (colllidingSprite == blockManager.baseBlock.currentBlock)
-            {
-                blockPropertiesStatus.collidingBlockProperty = blockManager.baseBlock;
-            }
-            else
-            {
-                for (int i = 0; i < blockManager.blocks.Count; i++)
-                {
-                    if (colllidingSprite == blockManager.blocks[i].currentBlock)
-                    {
-                        blockPropertiesStatus.collidingBlockProperty = blockManager.blocks[i];
-                    }
-                }
-            }
         }
     }
     // you need to click on the screen, then the block will fall.
@@ -183,9 +165,29 @@ public class Block : MonoBehaviour
     }
     void CheckMatchingBlock()
     {
-        if(blockPropertiesStatus.collidingBlockProperty != null)
+        Debug.Log("Check");
+        var colllidingSprite = collidingBlock.GetComponent<SpriteRenderer>().sprite;
+
+        if (colllidingSprite == blockManager.baseBlock.currentBlock)
         {
-            var thisSprite = GetComponent<SpriteRenderer>().sprite;
+            Debug.Log("Got base property!");
+            blockPropertiesStatus.collidingBlockProperty = blockManager.baseBlock;
+        }
+        else
+        {
+            for (int i = 0; i < blockManager.blocks.Count; i++)
+            {
+                if (colllidingSprite == blockManager.blocks[i].currentBlock)
+                {
+                    Debug.Log("Got alternative property!");
+                    blockPropertiesStatus.collidingBlockProperty = blockManager.blocks[i];
+                }
+            }
+        }
+
+        if (blockPropertiesStatus.collidingBlockProperty != null)
+        {
+            var thisSprite = this.GetComponent<SpriteRenderer>().sprite;
             for (int i = 0; i < blockPropertiesStatus.collidingBlockProperty.matchingBlocks.Count; i++)
             {
                 if (thisSprite == blockPropertiesStatus.collidingBlockProperty.matchingBlocks[i])
@@ -198,19 +200,9 @@ public class Block : MonoBehaviour
                 {
                     Debug.Log("Not Matching!");
                     blockManager.selectBlock.gameObject.SetActive(false);
+                    gameManager.isGameOver = true;
                 }
             }
         }
-    }
-    IEnumerator StartCheckingMatch()
-    {
-        yield return new WaitForSeconds(1);
-
-        CheckMatchingBlock();
-
-        yield return new WaitForSeconds(1);
-
-        blockManager.selectBlock.gameObject.SetActive(true);
-        this.GetComponent<Block>().enabled = false;
     }
 }

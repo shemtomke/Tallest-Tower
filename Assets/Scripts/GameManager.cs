@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject loadingScreen;
     public GameObject gameScn1;
     public GameObject gameScn2;
+    public GameObject gameOverSreen;
 
     [Header("Language")]
     public Lang currentLanguage = Lang.usa;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     public Sprite unmute;
 
     bool isMute;
+    public bool isGameOver = false;
 
     private void Start()
     {
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         bgMusic.mute = isMute ? true : false;
+        gameOverSreen.SetActive(isGameOver);
     }
     // Retry Game
     public void Retry()
