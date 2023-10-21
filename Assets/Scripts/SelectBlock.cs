@@ -11,6 +11,7 @@ public class SelectBlock : MonoBehaviour
     public Sprite selectedBlock;
     public BlockPropertiesStatus blockPropertiesStatus;
 
+    public CameraOffset cam;
     private void OnMouseDown()
     {
         isSelect = true;
@@ -32,6 +33,7 @@ public class SelectBlock : MonoBehaviour
     }
     private void Update()
     {
+        transform.position = blockManager.blockPos;
         TouchInput();
         UpdateBlock();
     }
@@ -66,7 +68,7 @@ public class SelectBlock : MonoBehaviour
     {
         if (!isSelect)
         {
-            currentBlock = (currentBlock + 1) % blockManager.blocks.Count;
+            currentBlock = (currentBlock + 1) % (blockManager.blocks.Count - 1);
         }
     }
     public void PreviousBlock()
@@ -74,7 +76,7 @@ public class SelectBlock : MonoBehaviour
         if (!isSelect)
         {
             // Add blockManager.blocks.Count to handle negative index cases and loop around
-            currentBlock = (currentBlock - 1 + blockManager.blocks.Count) % blockManager.blocks.Count;
+            currentBlock = (currentBlock - 1 + (blockManager.blocks.Count - 1)) % (blockManager.blocks.Count - 1);
         }
     }
     public void ResetBlock()

@@ -6,7 +6,6 @@ public class BlockManager : MonoBehaviour
 {
     public GameObject blockPrefab;
     public List<BlockProperties> blocks;
-    public BlockProperties baseBlock;
     public Vector2 blockPos;
 
     public SelectBlock selectBlock;

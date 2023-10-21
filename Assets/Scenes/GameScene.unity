@@ -3343,6 +3343,7 @@ GameObject:
   - component: {fileID: 1091643220}
   - component: {fileID: 1091643219}
   - component: {fileID: 1091643218}
+  - component: {fileID: 1091643221}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3416,6 +3417,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1091643221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091643217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712fc8c14f2256946a4f374149770ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1091643219}
+  camOffset: 5
+  selectionBlockOffset: 5
+  centerY: 0
+  target: {x: 0, y: 0, z: 0}
+  blocks: []
+  centreObj: {fileID: 0}
 --- !u!1 &1130732787
 GameObject:
   m_ObjectHideFlags: 0
@@ -4039,7 +4059,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7f550736a826cf941af03314698d9fc4, type: 2}
   - {fileID: 11400000, guid: 31702eb0a3203674d96f4054eab73ff3, type: 2}
   - {fileID: 11400000, guid: 7c63275174fb98948bfeac18433965be, type: 2}
-  baseBlock: {fileID: 11400000, guid: 4d5c82d774b04bc4a8fd02613f92ee4c, type: 2}
+  - {fileID: 11400000, guid: 4d5c82d774b04bc4a8fd02613f92ee4c, type: 2}
   blockPos: {x: 0, y: 4.5}
   selectBlock: {fileID: 1215647738}
   currentActiveBlock: {fileID: 0}

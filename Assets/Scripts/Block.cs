@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -19,6 +20,7 @@ public class Block : MonoBehaviour
     BlockManager blockManager;
     BlockPropertiesStatus blockPropertiesStatus;
     GameManager gameManager;
+    CameraOffset cameraOffset;
 
     private void Start()
     {
@@ -26,6 +28,7 @@ public class Block : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         blockManager = FindObjectOfType<BlockManager>();
         blockPropertiesStatus = FindObjectOfType<BlockPropertiesStatus>();
+        cameraOffset = FindObjectOfType<CameraOffset>();
 
         currentBlock = this.gameObject;
     }
@@ -155,6 +158,7 @@ public class Block : MonoBehaviour
     {
         if (!hasCollided && (collision.gameObject.CompareTag("Base") || collision.gameObject.CompareTag("Block")))
         {
+            cameraOffset.blocks.Add(this.gameObject);
             collidingBlock = collision.gameObject;
             hasCollided = true;
             isStop = true;
@@ -165,43 +169,44 @@ public class Block : MonoBehaviour
     }
     void CheckMatchingBlock()
     {
-        Debug.Log("Check");
         var colllidingSprite = collidingBlock.GetComponent<SpriteRenderer>().sprite;
 
-        if (colllidingSprite == blockManager.baseBlock.currentBlock)
+        for (int i = 0; i < blockManager.blocks.Count; i++)
         {
-            Debug.Log("Got base property!");
-            blockPropertiesStatus.collidingBlockProperty = blockManager.baseBlock;
-        }
-        else
-        {
-            for (int i = 0; i < blockManager.blocks.Count; i++)
+            if (colllidingSprite == blockManager.blocks[i].currentBlock)
             {
-                if (colllidingSprite == blockManager.blocks[i].currentBlock)
-                {
-                    Debug.Log("Got alternative property!");
-                    blockPropertiesStatus.collidingBlockProperty = blockManager.blocks[i];
-                }
+                Debug.Log("Got alternative property!");
+                blockPropertiesStatus.collidingBlockProperty = blockManager.blocks[i];
             }
         }
 
         if (blockPropertiesStatus.collidingBlockProperty != null)
         {
             var thisSprite = this.GetComponent<SpriteRenderer>().sprite;
-            for (int i = 0; i < blockPropertiesStatus.collidingBlockProperty.matchingBlocks.Count; i++)
+            var collidingBlock = blockPropertiesStatus.collidingBlockProperty;
+
+            bool isMatching = false;
+
+            for (int i = 0; i < collidingBlock.matchingBlocks.Count; i++)
             {
-                if (thisSprite == blockPropertiesStatus.collidingBlockProperty.matchingBlocks[i])
+                if (thisSprite == collidingBlock.matchingBlocks[i])
                 {
                     Debug.Log("Matching!");
+                    cameraOffset.CheckBlockPosition();
                     blockManager.selectBlock.gameObject.SetActive(true);
                     this.GetComponent<Block>().enabled = false;
+                    this.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY;
+                    //this.GetComponent<BoxCollider2D>().enabled = false;
+                    isMatching = true;
+                    break;
                 }
-                else
-                {
-                    Debug.Log("Not Matching!");
-                    blockManager.selectBlock.gameObject.SetActive(false);
-                    gameManager.isGameOver = true;
-                }
+            }
+
+            if (!isMatching)
+            {
+                Debug.Log("Not Matching!");
+                blockManager.selectBlock.gameObject.SetActive(false);
+                gameManager.isGameOver = true;
             }
         }
     }
