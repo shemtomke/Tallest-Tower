@@ -3110,6 +3110,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2146742214}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameOver
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &924489980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3434,6 +3446,7 @@ MonoBehaviour:
   selectionBlockOffset: 5
   centerY: 0
   target: {x: 0, y: 0, z: 0}
+  selectionBlockTarget: {x: 0, y: 0, z: 0}
   blocks: []
   centreObj: {fileID: 0}
 --- !u!1 &1130732787
@@ -4351,6 +4364,7 @@ MonoBehaviour:
   isSelect: 0
   selectedBlock: {fileID: 0}
   blockPropertiesStatus: {fileID: 1623559967}
+  cam: {fileID: 0}
 --- !u!1 &1224898572
 GameObject:
   m_ObjectHideFlags: 0
@@ -6057,6 +6071,8 @@ MonoBehaviour:
   lockedFlag: {fileID: 21300000, guid: 073fee7a4500b8247b25bad8e6c0369c, type: 3}
   flagPrefab: {fileID: 29604574552780987, guid: cbae66c128cb5984781335022aaee520, type: 3}
   contentPos: {fileID: 1538900146}
+  unlockCountryObj: {fileID: 2104961535}
+  countryOpened: {fileID: 1797797713}
 --- !u!4 &1781805401
 Transform:
   m_ObjectHideFlags: 0

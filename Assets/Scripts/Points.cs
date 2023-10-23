@@ -21,6 +21,7 @@ public class Points : MonoBehaviour
     private void Update()
     {
         UpdateScoreText();
+        UpdateHighScoreText();
     }
     public int FallenBlockPoints()
     { return currentPoints++; }

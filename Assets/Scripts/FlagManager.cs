@@ -12,11 +12,16 @@ public class FlagManager : MonoBehaviour
     public Image flagPrefab;
     public RectTransform contentPos;
 
+    public GameObject unlockCountryObj;
+    public Image countryOpened;
+
     Points points;
+
+    int pointsPerFlag;
     private void Start()
     {
         points = FindObjectOfType<Points>();
-
+        pointsPerFlag = 10; // Number of points required per flag
         for (int i = 0; i < collection.Count; i++)
         {
             Image flag = Instantiate(flagPrefab, contentPos);
@@ -27,11 +32,10 @@ public class FlagManager : MonoBehaviour
     private void Update()
     {
         ActivateFlags();
+        UnlockedCountry();
     }
     void ActivateFlags()
     {
-        int pointsPerFlag = 10; // Number of points required per flag
-
         for (int i = 0; i < flags.Count; i++)
         {
             if ((i + 1) * pointsPerFlag <= points.highscore)
@@ -43,6 +47,21 @@ public class FlagManager : MonoBehaviour
             {
                 // If not enough points, display the lockedFlag
                 collection[i].sprite = lockedFlag;
+            }
+        }
+    }
+    public void UnlockedCountry()
+    {
+        for (int i = 0; i < flags.Count; i++)
+        {
+            if ((i + 1) * pointsPerFlag == points.highscore)
+            {
+                unlockCountryObj.SetActive(true);
+                countryOpened.sprite = flags[i];
+            }
+            else
+            {
+                unlockCountryObj.SetActive(false);
             }
         }
     }

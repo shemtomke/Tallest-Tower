@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
         bgMusic.mute = isMute ? true : false;
         gameOverSreen.SetActive(isGameOver);
     }
+    public void GameOver(bool gameOver)
+    {
+        isGameOver = gameOver;
+    }
     // Retry Game
     public void Retry()
     {
